@@ -5,8 +5,8 @@
 
 HelloWorld::HelloWorld(Display* display) {
     this->display = display;
+    screen = XDefaultScreenOfDisplay(display);
 
-    Screen* screen = XDefaultScreenOfDisplay(display);
     int screenWidth = XWidthOfScreen(screen);
     int screenHeight = XHeightOfScreen(screen);
 
@@ -18,6 +18,27 @@ HelloWorld::HelloWorld(Display* display) {
     window = XCreateSimpleWindow(display, XRootWindowOfScreen(screen),
             windowX, windowY, windowWidth, windowHeight, 1,
             BlackPixelOfScreen(screen), WhitePixelOfScreen(screen));
+
+    long eventMask = ExposureMask;
+    XSelectInput(display, window, eventMask);
+
+    draw();
+}
+
+void HelloWorld::draw() {
+    Window rootWindow;
+    int x;
+    int y;
+    unsigned int width;
+    unsigned int height;
+    unsigned int borderWidth;
+    unsigned int bitDepth;
+
+    XGetGeometry(display, window, &rootWindow, &x, &y, &width, &height,
+            &borderWidth, &bitDepth);
+
+    GC gc = XDefaultGCOfScreen(screen);
+    XDrawLine(display, window, gc, 0, 0, width, height);
 }
 
 void HelloWorld::map() {

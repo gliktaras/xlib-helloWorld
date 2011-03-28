@@ -19,8 +19,24 @@ int main() {
     HelloWorld mainWindow(display);
     mainWindow.map();
 
-    XSync(display, false);
-    while(true);
+    XFlush(display);
+
+    XEvent event;
+    while(true) {
+        XNextEvent(display, &event);
+
+        switch(event.type) {
+        case Expose:
+            if(event.xexpose.window == mainWindow.getWindow()) {
+                if(event.xexpose.count > 0) {
+                    mainWindow.draw();
+                }
+            }
+            break;
+        default:
+            break;
+        }
+    }
 
     XCloseDisplay(display);
     return 0;
