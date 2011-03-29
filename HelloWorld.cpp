@@ -1,3 +1,4 @@
+#include "Game.h"
 #include "HelloWorld.h"
 
 #include <X11/Xlib.h>
@@ -10,7 +11,9 @@ const int HelloWorld::STRING_HEIGHT = 20;
 const char HelloWorld::WINDOW_FONT[] = "-*-*-*-*-*-*-12-*-*-*-*-*-*-*";
 
 
-HelloWorld::HelloWorld(Display* display) {
+HelloWorld::HelloWorld(Display* display) :
+    _game() {
+
     _display = display;
     _screen = XDefaultScreenOfDisplay(display);
 
@@ -33,7 +36,6 @@ HelloWorld::HelloWorld(Display* display) {
     long eventMask = ExposureMask;
     XSelectInput(_display, _window, eventMask);
 
-    restartGame();
     draw();
 }
 
@@ -66,12 +68,12 @@ void HelloWorld::draw() {
     // Draw glyphs.
     for(int i = 0; i < 3; i++) {
         for(int j = 0; j < 3; j++) {
-            switch(_boardState[i][j]) {
-            case 'O':
+            switch(_game.getCellState(i, j)) {
+            case CELL_O:
                 _drawO(&gc, xStepSize * i, STRING_HEIGHT * 2 + yStepSize * j,
                         xStepSize, yStepSize);
                 break;
-            case 'X':
+            case CELL_X:
                 _drawX(&gc, xStepSize * i, STRING_HEIGHT * 2 + yStepSize * j,
                         xStepSize, yStepSize);
                 break;
@@ -99,7 +101,7 @@ void HelloWorld::draw() {
     _drawStringCentered(&gc, "[R]estart, [Q]uit.", 0, height - STRING_HEIGHT,
             width, STRING_HEIGHT);
 
-    switch(_gameState) {
+    switch(_game.getGameState()) {
     case HUMAN_TURN:
         _drawStringCentered(&gc, "It is your turn to play.", 0, STRING_HEIGHT,
                 width, STRING_HEIGHT);
@@ -131,13 +133,8 @@ void HelloWorld::map() {
 
 
 void HelloWorld::restartGame() {
-    for(int i = 0; i < 3; i++) {
-        for(int j = 0; j < 3; j++) {
-            _boardState[i][j] = ' ';
-        }
-    }
-    _gameState = HUMAN_TURN;
-    _turnsPassed = 0;
+    _game.restart();
+    draw();
 }
 
 
