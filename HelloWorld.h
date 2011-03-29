@@ -12,13 +12,13 @@ public:
     void draw();
     void map();
 private:
-    Display* display;
-    Screen* screen;
-    Window window;
+    Display* _display;
+    Screen* _screen;
+    Window _window;
 };
 
 inline Window HelloWorld::getWindow() {
-    return window;
+    return _window;
 }
 
 #endif //__HELLOWORLD_H__
