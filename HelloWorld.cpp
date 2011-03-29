@@ -20,7 +20,6 @@ HelloWorld::HelloWorld(Display* display) :
 
     _blackColor = BlackPixelOfScreen(_screen);
     _whiteColor = WhitePixelOfScreen(_screen);
-
     _font = XLoadFont(_display, WINDOW_FONT);
 
     int screenWidth = XWidthOfScreen(_screen);
@@ -55,7 +54,7 @@ void HelloWorld::draw() {
     XSetFont(_display, gc, _font);
     XSetForeground(_display, gc, _blackColor);
 
-    // Clear the window.
+    // Clearing the window.
     XClearArea(_display, _window, 0, 0, width, height, false);
 
     // Is the window large enough for us?
@@ -65,11 +64,11 @@ void HelloWorld::draw() {
         return;
     }
 
-    // Calculate grid cell sizes.
+    // Calculating grid cell sizes.
     int xStepSize = width / 3;
     int yStepSize = (height - STRING_HEIGHT * 3) / 3;
 
-    // Draw glyphs.
+    // Drawing glyphs.
     for(int i = 0; i < 3; i++) {
         for(int j = 0; j < 3; j++) {
             switch(_game.getCellState(i, j)) {
@@ -89,7 +88,7 @@ void HelloWorld::draw() {
     XSetBackground(_display, gc, _whiteColor);
     XSetForeground(_display, gc, _blackColor);
 
-    // Draw the grid lines.
+    // Drawing the grid lines.
     for(int i = 0; i <= 3; i++) {
         int yValue = STRING_HEIGHT * 2 + yStepSize * i;
         XDrawLine(_display, _window, gc, 0, yValue, width, yValue);
@@ -100,25 +99,25 @@ void HelloWorld::draw() {
                 height - STRING_HEIGHT);
     }
 
-    // Draw the strings.
+    // Drawing the strings.
     _drawStringCentered(&gc, "Hello, World!", 0, 0, width, STRING_HEIGHT);
     _drawStringCentered(&gc, "[R]estart", 0, height - STRING_HEIGHT,
             width, STRING_HEIGHT);
 
     switch(_game.getGameState()) {
-    case HUMAN_TURN:
+    case X_TURN:
         _drawStringCentered(&gc, "It is your turn to play.", 0, STRING_HEIGHT,
                 width, STRING_HEIGHT);
         break;
-    case AI_TURN:
+    case O_TURN:
         _drawStringCentered(&gc, "Please wait, thinking...", 0, STRING_HEIGHT,
                 width, STRING_HEIGHT);
         break;
-    case HUMAN_WON:
+    case X_WON:
         _drawStringCentered(&gc, "You have won.", 0, STRING_HEIGHT, width,
                 STRING_HEIGHT);
         break;
-    case AI_WON:
+    case O_WON:
         _drawStringCentered(&gc, "You have lost.", 0, STRING_HEIGHT, width,
                 STRING_HEIGHT);
         break;
@@ -143,7 +142,7 @@ void HelloWorld::handleKeyPress(unsigned int state, unsigned int keycode) {
         _game.restart();
         draw();
     } else if(keycode == keyCode_q) {
-        // Quit.
+        // Quit, somehow
     }
 }
 
@@ -162,6 +161,11 @@ void HelloWorld::handleMousePress(int x, int y, unsigned int state,
 
             int cellX = x / xStepSize;
             int cellY = (y - STRING_HEIGHT * 2) / yStepSize;
+
+            if(_game.makeMove(cellX, cellY)) {
+                _game.makeRandomMove();
+                draw();
+            }
         }
     }
 }
