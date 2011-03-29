@@ -27,10 +27,8 @@ int main() {
 
         switch(event.type) {
         case Expose:
-            if(event.xexpose.window == mainWindow.getWindow()) {
-                if(event.xexpose.count > 0) {
-                    mainWindow.draw();
-                }
+            if(event.xexpose.count == 0) {
+                mainWindow.draw();
             }
             break;
         default:

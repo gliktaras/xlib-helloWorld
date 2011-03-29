@@ -12,9 +12,15 @@ public:
     void draw();
     void map();
 private:
+    const static char WINDOW_FONT[];
+
     Display* _display;
     Screen* _screen;
     Window _window;
+
+    Font _font;
+    unsigned long _blackColor;
+    unsigned long _whiteColor;
 };
 
 inline Window HelloWorld::getWindow() {
