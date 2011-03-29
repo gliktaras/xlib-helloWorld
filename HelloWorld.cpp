@@ -34,7 +34,7 @@ HelloWorld::HelloWorld(Display* display) :
             windowX, windowY, windowWidth, windowHeight, 1, _blackColor,
             _whiteColor);
 
-    long eventMask = ExposureMask | KeyPressMask;
+    long eventMask = ButtonPressMask | ExposureMask | KeyPressMask;
     XSelectInput(_display, _window, eventMask);
 
     draw();
@@ -144,6 +144,25 @@ void HelloWorld::handleKeyPress(unsigned int state, unsigned int keycode) {
         draw();
     } else if(keycode == keyCode_q) {
         // Quit.
+    }
+}
+
+void HelloWorld::handleMousePress(int x, int y, unsigned int state,
+                                  unsigned int button) {
+    if(button == 1) {
+        Window rootWindow;
+        int winX, winY;
+        unsigned int width, height, borderWidth, bitDepth;
+        XGetGeometry(_display, _window, &rootWindow, &winX, &winY, &width,
+                &height, &borderWidth, &bitDepth);
+
+        if((y >= 2 * STRING_HEIGHT) && (y < (height - STRING_HEIGHT))) {
+            int xStepSize = width / 3;
+            int yStepSize = (height - STRING_HEIGHT * 3) / 3;
+
+            int cellX = x / xStepSize;
+            int cellY = (y - STRING_HEIGHT * 2) / yStepSize;
+        }
     }
 }
 

@@ -26,6 +26,9 @@ int main() {
         XNextEvent(display, &event);
 
         switch(event.type) {
+        case ButtonPress:
+            mainWindow.handleMousePress(event.xbutton.x, event.xbutton.y,
+                    event.xbutton.state, event.xbutton.button);
         case Expose:
             if(event.xexpose.count == 0) {
                 mainWindow.draw();
