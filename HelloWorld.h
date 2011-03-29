@@ -21,6 +21,9 @@ private:
     Font _font;
     unsigned long _blackColor;
     unsigned long _whiteColor;
+
+    void _drawString(GC* gc, char* str, int x, int y);
+    void _drawStringCentered(GC* gc, char* str, int x, int y, int w, int h);
 };
 
 inline Window HelloWorld::getWindow() {
