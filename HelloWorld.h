@@ -14,7 +14,7 @@ public:
     void draw();
     void map();
 
-    void handleKeyPress(unsigned int mod, unsigned int keycode);
+    void handleKeyPress(unsigned int state, unsigned int keycode);
     void restartGame();
 private:
     const static int MIN_CELL_SIZE;

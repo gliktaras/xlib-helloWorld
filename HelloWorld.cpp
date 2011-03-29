@@ -135,7 +135,7 @@ void HelloWorld::map() {
     XMapWindow(_display, _window);
 }
 
-void HelloWorld::handleKeyPress(unsigned int mod, unsigned int keycode) {
+void HelloWorld::handleKeyPress(unsigned int state, unsigned int keycode) {
     unsigned int keyCode_r = XKeysymToKeycode(_display, XK_r);
     unsigned int keyCode_q = XKeysymToKeycode(_display, XK_q);
 
@@ -156,26 +156,29 @@ void HelloWorld::restartGame() {
 void HelloWorld::_drawO(GC* gc, int x, int y, int w, int h) {
     XSetBackground(_display, *gc, _whiteColor);
     XSetForeground(_display, *gc, _blackColor);
-    XFillArc(_display, _window, *gc, x + w/10, y + h/10, (w*4)/5, (h*4)/5, 0, 360*64);
+    XFillArc(_display, _window, *gc, x + w/10, y + h/10, (w*4)/5, (h*4)/5, 0,
+            360*64);
 
     XSetForeground(_display, *gc, _whiteColor);
-    XFillArc(_display, _window, *gc, x + w/5, y + h/5, (w*3)/5, (h*3)/5, 0, 360*64);
+    XFillArc(_display, _window, *gc, x + w/5, y + h/5, (w*3)/5, (h*3)/5, 0,
+            360*64);
 }
 
 void HelloWorld::_drawX(GC* gc, int x, int y, int w, int h) {
-    static const int pointCount = 12;
-    static const XPoint rawCross[] = { {1, 2}, {2, 1}, {5, 4}, {8, 1}, {9, 2},
+    static const int POINT_COUNT = 12;
+    static const XPoint RAW_CROSS[] = { {1, 2}, {2, 1}, {5, 4}, {8, 1}, {9, 2},
             {6, 5}, {9, 8}, {8, 9}, {5, 6}, {2, 9}, {1, 8}, {4, 5} };
 
-    XPoint scaledCross[pointCount];
-    for(int i = 0; i < pointCount; i++) {
-        scaledCross[i].x = (rawCross[i].x * w) / 10 + x;
-        scaledCross[i].y = (rawCross[i].y * h) / 10 + y;
+    XPoint scaledCross[POINT_COUNT];
+    for(int i = 0; i < POINT_COUNT; i++) {
+        scaledCross[i].x = (RAW_CROSS[i].x * w) / 10 + x;
+        scaledCross[i].y = (RAW_CROSS[i].y * h) / 10 + y;
     }
 
     XSetBackground(_display, *gc, _whiteColor);
     XSetForeground(_display, *gc, _blackColor);
-    XFillPolygon(_display, _window, *gc, scaledCross, pointCount, Nonconvex, CoordModeOrigin);
+    XFillPolygon(_display, _window, *gc, scaledCross, POINT_COUNT, Nonconvex,
+            CoordModeOrigin);
 }
 
 
