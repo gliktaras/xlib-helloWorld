@@ -14,8 +14,11 @@ public:
 
     void restartGame();
 private:
-    const static char WINDOW_FONT[];
     enum GAME_STATE { HUMAN_TURN, AI_TURN, HUMAN_WON, AI_WON, DRAW };
+
+    const static int MIN_CELL_SIZE;
+    const static int STRING_HEIGHT;
+    const static char WINDOW_FONT[];
 
     Display* _display;
     Screen* _screen;
