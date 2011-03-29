@@ -2,6 +2,7 @@
 #include "HelloWorld.h"
 
 #include <X11/Xlib.h>
+#include <X11/keysym.h>
 
 #include <cstring>
 
@@ -33,7 +34,7 @@ HelloWorld::HelloWorld(Display* display) :
             windowX, windowY, windowWidth, windowHeight, 1, _blackColor,
             _whiteColor);
 
-    long eventMask = ExposureMask;
+    long eventMask = ExposureMask | KeyPressMask;
     XSelectInput(_display, _window, eventMask);
 
     draw();
@@ -53,6 +54,9 @@ void HelloWorld::draw() {
     XSetBackground(_display, gc, _whiteColor);
     XSetFont(_display, gc, _font);
     XSetForeground(_display, gc, _blackColor);
+
+    // Clear the window.
+    XClearArea(_display, _window, 0, 0, width, height, false);
 
     // Is the window large enough for us?
     if((width < MIN_CELL_SIZE * 3) ||
@@ -98,7 +102,7 @@ void HelloWorld::draw() {
 
     // Draw the strings.
     _drawStringCentered(&gc, "Hello, World!", 0, 0, width, STRING_HEIGHT);
-    _drawStringCentered(&gc, "[R]estart, [Q]uit.", 0, height - STRING_HEIGHT,
+    _drawStringCentered(&gc, "[R]estart", 0, height - STRING_HEIGHT,
             width, STRING_HEIGHT);
 
     switch(_game.getGameState()) {
@@ -131,6 +135,17 @@ void HelloWorld::map() {
     XMapWindow(_display, _window);
 }
 
+void HelloWorld::handleKeyPress(unsigned int mod, unsigned int keycode) {
+    unsigned int keyCode_r = XKeysymToKeycode(_display, XK_r);
+    unsigned int keyCode_q = XKeysymToKeycode(_display, XK_q);
+
+    if(keycode == keyCode_r) {
+        _game.restart();
+        draw();
+    } else if(keycode == keyCode_q) {
+        // Quit.
+    }
+}
 
 void HelloWorld::restartGame() {
     _game.restart();

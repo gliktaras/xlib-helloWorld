@@ -31,6 +31,8 @@ int main() {
                 mainWindow.draw();
             }
             break;
+        case KeyPress:
+            mainWindow.handleKeyPress(event.xkey.state, event.xkey.keycode);
         default:
             break;
         }
