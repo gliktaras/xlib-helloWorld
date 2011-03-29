@@ -59,9 +59,31 @@ void HelloWorld::draw() {
         return;
     }
 
-    // Draw the grid lines.
+    // Calculate grid cell sizes.
     int xStepSize = width / 3;
     int yStepSize = (height - STRING_HEIGHT * 3) / 3;
+
+    // Draw glyphs.
+    for(int i = 0; i < 3; i++) {
+        for(int j = 0; j < 3; j++) {
+            switch(_boardState[i][j]) {
+            case 'O':
+                _drawO(&gc, xStepSize * i, STRING_HEIGHT * 2 + yStepSize * j,
+                        xStepSize, yStepSize);
+                break;
+            case 'X':
+                _drawX(&gc, xStepSize * i, STRING_HEIGHT * 2 + yStepSize * j,
+                        xStepSize, yStepSize);
+                break;
+            default:
+                break;
+            }
+        }
+    }
+    XSetBackground(_display, gc, _whiteColor);
+    XSetForeground(_display, gc, _blackColor);
+
+    // Draw the grid lines.
     for(int i = 0; i <= 3; i++) {
         int yValue = STRING_HEIGHT * 2 + yStepSize * i;
         XDrawLine(_display, _window, gc, 0, yValue, width, yValue);
@@ -116,6 +138,32 @@ void HelloWorld::restartGame() {
     }
     _gameState = HUMAN_TURN;
     _turnsPassed = 0;
+}
+
+
+void HelloWorld::_drawO(GC* gc, int x, int y, int w, int h) {
+    XSetBackground(_display, *gc, _whiteColor);
+    XSetForeground(_display, *gc, _blackColor);
+    XFillArc(_display, _window, *gc, x + w/10, y + h/10, (w*4)/5, (h*4)/5, 0, 360*64);
+
+    XSetForeground(_display, *gc, _whiteColor);
+    XFillArc(_display, _window, *gc, x + w/5, y + h/5, (w*3)/5, (h*3)/5, 0, 360*64);
+}
+
+void HelloWorld::_drawX(GC* gc, int x, int y, int w, int h) {
+    static const int pointCount = 12;
+    static const XPoint rawCross[] = { {1, 2}, {2, 1}, {5, 4}, {8, 1}, {9, 2},
+            {6, 5}, {9, 8}, {8, 9}, {5, 6}, {2, 9}, {1, 8}, {4, 5} };
+
+    XPoint scaledCross[pointCount];
+    for(int i = 0; i < pointCount; i++) {
+        scaledCross[i].x = (rawCross[i].x * w) / 10 + x;
+        scaledCross[i].y = (rawCross[i].y * h) / 10 + y;
+    }
+
+    XSetBackground(_display, *gc, _whiteColor);
+    XSetForeground(_display, *gc, _blackColor);
+    XFillPolygon(_display, _window, *gc, scaledCross, pointCount, Nonconvex, CoordModeOrigin);
 }
 
 

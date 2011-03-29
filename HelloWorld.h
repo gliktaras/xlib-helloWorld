@@ -32,6 +32,9 @@ private:
     GAME_STATE _gameState;
     int _turnsPassed;
 
+    void _drawO(GC* gc, int x, int y, int w, int h);
+    void _drawX(GC* gc, int x, int y, int w, int h);
+
     void _drawString(GC* gc, char* str, int x, int y);
     void _drawStringCentered(GC* gc, char* str, int x, int y, int w, int h);
 };
