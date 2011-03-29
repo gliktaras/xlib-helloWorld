@@ -11,8 +11,11 @@ public:
 
     void draw();
     void map();
+
+    void restartGame();
 private:
     const static char WINDOW_FONT[];
+    enum GAME_STATE { HUMAN_TURN, AI_TURN, HUMAN_WON, AI_WON, DRAW };
 
     Display* _display;
     Screen* _screen;
@@ -21,6 +24,10 @@ private:
     Font _font;
     unsigned long _blackColor;
     unsigned long _whiteColor;
+
+    char _boardState[3][3];
+    GAME_STATE _gameState;
+    int _turnsPassed;
 
     void _drawString(GC* gc, char* str, int x, int y);
     void _drawStringCentered(GC* gc, char* str, int x, int y, int w, int h);

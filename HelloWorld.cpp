@@ -31,6 +31,7 @@ HelloWorld::HelloWorld(Display* display) {
     long eventMask = ExposureMask;
     XSelectInput(_display, _window, eventMask);
 
+    restartGame();
     draw();
 }
 
@@ -52,13 +53,54 @@ void HelloWorld::draw() {
         return;
     }
 
+    int xStepSize = width / 3;
+    int yStepSize = (height - 75) / 3;
+    for(int i = 0; i <= 3; i++) {
+        int yValue = 50 + yStepSize * i;
+        XDrawLine(_display, _window, gc, 0, yValue, width, yValue);
+    }
+    for(int i = 1; i <= 2; i++) {
+        int xValue = xStepSize * i;
+        XDrawLine(_display, _window, gc, xValue, 50, xValue, height - 25);
+    }
+
     _drawStringCentered(&gc, "Hello, World!", 0, 0, width, 25);
-    _drawStringCentered(&gc, "Tic-tac-toe message here.", 0, 25, width, 25);
     _drawStringCentered(&gc, "[R]estart, [Q]uit.", 0, height - 25, width, 25);
+
+    switch(_gameState) {
+    case HUMAN_TURN:
+        _drawStringCentered(&gc, "It is your turn to play.", 0, 25, width, 25);
+        break;
+    case AI_TURN:
+        _drawStringCentered(&gc, "Please wait, thinking...", 0, 25, width, 25);
+        break;
+    case HUMAN_WON:
+        _drawStringCentered(&gc, "You have won.", 0, 25, width, 25);
+        break;
+    case AI_WON:
+        _drawStringCentered(&gc, "You have lost.", 0, 25, width, 25);
+        break;
+    case DRAW:
+        _drawStringCentered(&gc, "It is a draw.", 0, 25, width, 25);
+        break;
+    default:
+        break;
+    }
 }
 
 void HelloWorld::map() {
     XMapWindow(_display, _window);
+}
+
+
+void HelloWorld::restartGame() {
+    for(int i = 0; i < 3; i++) {
+        for(int j = 0; j < 3; j++) {
+            _boardState[i][j] = ' ';
+        }
+    }
+    _gameState = HUMAN_TURN;
+    _turnsPassed = 0;
 }
 
 
