@@ -205,12 +205,12 @@ void HelloWorld::_drawX(GC* gc, int x, int y, int w, int h) {
 }
 
 
-void HelloWorld::_drawString(GC* gc, char* str, int x, int y) {
+void HelloWorld::_drawString(GC* gc, const char* str, int x, int y) {
     XDrawString(_display, _window, *gc, x, y, str, strlen(str));
 }
 
-void HelloWorld::_drawStringCentered(GC* gc, char* str, int x, int y, int w,
-                                     int h) {
+void HelloWorld::_drawStringCentered(GC* gc, const char* str, int x, int y,
+                                     int w, int h) {
     int direction, ascent, descent;
     XCharStruct strDimensions;
     XTextExtents(XQueryFont(_display, XGContextFromGC(*gc)), str, strlen(str),
