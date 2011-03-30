@@ -94,22 +94,26 @@ void Game::_checkForEnd() {
 
     for(int i = 0; i < 3; i++) {
         if((_boardState[i][0] == _boardState[i][1]) &&
-                (_boardState[i][1] == _boardState[i][2])) {
+                (_boardState[i][1] == _boardState[i][2]) &&
+                (_boardState[i][0] != CELL_EMPTY)) {
             winningCell = _boardState[i][0];
         }
     }
     for(int i = 0; i < 3; i++) {
         if((_boardState[0][i] == _boardState[1][i]) &&
-                (_boardState[1][i] == _boardState[2][i])) {
+                (_boardState[1][i] == _boardState[2][i]) &&
+                (_boardState[0][1] != CELL_EMPTY)) {
             winningCell = _boardState[0][i];
         }
     }
     if((_boardState[0][0] == _boardState[1][1]) &&
-            (_boardState[1][1] == _boardState[2][2])) {
+            (_boardState[1][1] == _boardState[2][2]) &&
+            (_boardState[0][0] != CELL_EMPTY)) {
         winningCell = _boardState[0][0];
     }
     if((_boardState[2][0] == _boardState[1][1]) &&
-            (_boardState[1][1] == _boardState[0][2])) {
+            (_boardState[1][1] == _boardState[0][2]) &&
+            (_boardState[2][0] != CELL_EMPTY)) {
         winningCell = _boardState[2][0];
     }
 

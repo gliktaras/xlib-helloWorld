@@ -164,7 +164,9 @@ void HelloWorld::handleMousePress(const XButtonEvent& event) {
             int cellY = (event.y - STRING_HEIGHT * 2) / yStepSize;
 
             if(_game.makeMove(cellX, cellY)) {
-                _game.makeRandomMove();
+                if(_game.getGameState() == O_TURN) {
+                    _game.makeRandomMove();
+                }
                 draw();
             }
         }
