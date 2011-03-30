@@ -14,9 +14,8 @@ public:
     void draw();
     void map();
 
-    void handleKeyPress(unsigned int state, unsigned int keycode);
-    void handleMousePress(int x, int y, unsigned int state,
-            unsigned int button);
+    void handleKeyPress(const XKeyEvent& event);
+    void handleMousePress(const XButtonEvent& event);
     void restartGame();
 private:
     const static int MIN_CELL_SIZE;

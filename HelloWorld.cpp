@@ -135,33 +135,33 @@ void HelloWorld::map() {
     XMapWindow(_display, _window);
 }
 
-void HelloWorld::handleKeyPress(unsigned int state, unsigned int keycode) {
+void HelloWorld::handleKeyPress(const XKeyEvent& event) {
     unsigned int keyCode_r = XKeysymToKeycode(_display, XK_r);
     unsigned int keyCode_q = XKeysymToKeycode(_display, XK_q);
 
-    if(keycode == keyCode_r) {
+    if(event.keycode == keyCode_r) {
         _game.restart();
         draw();
-    } else if(keycode == keyCode_q) {
+    } else if(event.keycode == keyCode_q) {
         // Quit, somehow
     }
 }
 
-void HelloWorld::handleMousePress(int x, int y, unsigned int state,
-                                  unsigned int button) {
-    if(button == 1) {
+void HelloWorld::handleMousePress(const XButtonEvent& event) {
+    if(event.button == 1) {
         Window rootWindow;
         int winX, winY;
         unsigned int width, height, borderWidth, bitDepth;
         XGetGeometry(_display, _window, &rootWindow, &winX, &winY, &width,
                 &height, &borderWidth, &bitDepth);
 
-        if((y >= 2 * STRING_HEIGHT) && (y < (height - STRING_HEIGHT))) {
+        if((event.y >= 2 * STRING_HEIGHT) &&
+                (event.y < (height - STRING_HEIGHT))) {
             int xStepSize = width / 3;
             int yStepSize = (height - STRING_HEIGHT * 3) / 3;
 
-            int cellX = x / xStepSize;
-            int cellY = (y - STRING_HEIGHT * 2) / yStepSize;
+            int cellX = event.x / xStepSize;
+            int cellY = (event.y - STRING_HEIGHT * 2) / yStepSize;
 
             if(_game.makeMove(cellX, cellY)) {
                 _game.makeRandomMove();

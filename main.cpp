@@ -27,15 +27,14 @@ int main() {
 
         switch(event.type) {
         case ButtonPress:
-            mainWindow.handleMousePress(event.xbutton.x, event.xbutton.y,
-                    event.xbutton.state, event.xbutton.button);
+            mainWindow.handleMousePress((XButtonEvent)event.xbutton);
         case Expose:
             if(event.xexpose.count == 0) {
                 mainWindow.draw();
             }
             break;
         case KeyPress:
-            mainWindow.handleKeyPress(event.xkey.state, event.xkey.keycode);
+            mainWindow.handleKeyPress((XKeyEvent)event.xkey);
         default:
             break;
         }
