@@ -1,5 +1,6 @@
-#include "Game.h"
 #include "HelloWorld.h"
+
+#include "Game.h"
 
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
@@ -60,7 +61,7 @@ void HelloWorld::draw() {
     // Is the window large enough for us?
     if((width < MIN_CELL_SIZE * 3) ||
             (height < (MIN_CELL_SIZE * 3 + STRING_HEIGHT * 3))) {
-        _drawStringCentered(&gc, "Window too small.", 0, 0, width, height);
+        _drawStringCentered(gc, "Window too small.", 0, 0, width, height);
         return;
     }
 
@@ -73,11 +74,11 @@ void HelloWorld::draw() {
         for(int j = 0; j < 3; j++) {
             switch(_game.getCellState(i, j)) {
             case CELL_O:
-                _drawO(&gc, xStepSize * i, STRING_HEIGHT * 2 + yStepSize * j,
+                _drawO(gc, xStepSize * i, STRING_HEIGHT * 2 + yStepSize * j,
                         xStepSize, yStepSize);
                 break;
             case CELL_X:
-                _drawX(&gc, xStepSize * i, STRING_HEIGHT * 2 + yStepSize * j,
+                _drawX(gc, xStepSize * i, STRING_HEIGHT * 2 + yStepSize * j,
                         xStepSize, yStepSize);
                 break;
             default:
@@ -100,29 +101,29 @@ void HelloWorld::draw() {
     }
 
     // Drawing the strings.
-    _drawStringCentered(&gc, "Hello, World!", 0, 0, width, STRING_HEIGHT);
-    _drawStringCentered(&gc, "[R]estart", 0, height - STRING_HEIGHT,
+    _drawStringCentered(gc, "Hello, World!", 0, 0, width, STRING_HEIGHT);
+    _drawStringCentered(gc, "[R]estart", 0, height - STRING_HEIGHT,
             width, STRING_HEIGHT);
 
     switch(_game.getGameState()) {
     case X_TURN:
-        _drawStringCentered(&gc, "It is your turn to play.", 0, STRING_HEIGHT,
+        _drawStringCentered(gc, "It is your turn to play.", 0, STRING_HEIGHT,
                 width, STRING_HEIGHT);
         break;
     case O_TURN:
-        _drawStringCentered(&gc, "Please wait, thinking...", 0, STRING_HEIGHT,
+        _drawStringCentered(gc, "Please wait, thinking...", 0, STRING_HEIGHT,
                 width, STRING_HEIGHT);
         break;
     case X_WON:
-        _drawStringCentered(&gc, "You have won.", 0, STRING_HEIGHT, width,
+        _drawStringCentered(gc, "You have won.", 0, STRING_HEIGHT, width,
                 STRING_HEIGHT);
         break;
     case O_WON:
-        _drawStringCentered(&gc, "You have lost.", 0, STRING_HEIGHT, width,
+        _drawStringCentered(gc, "You have lost.", 0, STRING_HEIGHT, width,
                 STRING_HEIGHT);
         break;
     case DRAW:
-        _drawStringCentered(&gc, "It is a draw.", 0, STRING_HEIGHT, width,
+        _drawStringCentered(gc, "It is a draw.", 0, STRING_HEIGHT, width,
                 STRING_HEIGHT);
         break;
     default:
@@ -176,18 +177,18 @@ void HelloWorld::restartGame() {
 }
 
 
-void HelloWorld::_drawO(GC* gc, int x, int y, int w, int h) {
-    XSetBackground(_display, *gc, _whiteColor);
-    XSetForeground(_display, *gc, _blackColor);
-    XFillArc(_display, _window, *gc, x + w/10, y + h/10, (w*4)/5, (h*4)/5, 0,
+void HelloWorld::_drawO(const GC& gc, int x, int y, int w, int h) {
+    XSetBackground(_display, gc, _whiteColor);
+    XSetForeground(_display, gc, _blackColor);
+    XFillArc(_display, _window, gc, x + w/10, y + h/10, (w*4)/5, (h*4)/5, 0,
             360*64);
 
-    XSetForeground(_display, *gc, _whiteColor);
-    XFillArc(_display, _window, *gc, x + w/5, y + h/5, (w*3)/5, (h*3)/5, 0,
+    XSetForeground(_display, gc, _whiteColor);
+    XFillArc(_display, _window, gc, x + w/5, y + h/5, (w*3)/5, (h*3)/5, 0,
             360*64);
 }
 
-void HelloWorld::_drawX(GC* gc, int x, int y, int w, int h) {
+void HelloWorld::_drawX(const GC& gc, int x, int y, int w, int h) {
     static const int POINT_COUNT = 12;
     static const XPoint RAW_CROSS[] = { {1, 2}, {2, 1}, {5, 4}, {8, 1}, {9, 2},
             {6, 5}, {9, 8}, {8, 9}, {5, 6}, {2, 9}, {1, 8}, {4, 5} };
@@ -198,22 +199,22 @@ void HelloWorld::_drawX(GC* gc, int x, int y, int w, int h) {
         scaledCross[i].y = (RAW_CROSS[i].y * h) / 10 + y;
     }
 
-    XSetBackground(_display, *gc, _whiteColor);
-    XSetForeground(_display, *gc, _blackColor);
-    XFillPolygon(_display, _window, *gc, scaledCross, POINT_COUNT, Nonconvex,
+    XSetBackground(_display, gc, _whiteColor);
+    XSetForeground(_display, gc, _blackColor);
+    XFillPolygon(_display, _window, gc, scaledCross, POINT_COUNT, Nonconvex,
             CoordModeOrigin);
 }
 
 
-void HelloWorld::_drawString(GC* gc, const char* str, int x, int y) {
-    XDrawString(_display, _window, *gc, x, y, str, strlen(str));
+void HelloWorld::_drawString(const GC& gc, const char* str, int x, int y) {
+    XDrawString(_display, _window, gc, x, y, str, strlen(str));
 }
 
-void HelloWorld::_drawStringCentered(GC* gc, const char* str, int x, int y,
+void HelloWorld::_drawStringCentered(const GC& gc, const char* str, int x, int y,
                                      int w, int h) {
     int direction, ascent, descent;
     XCharStruct strDimensions;
-    XTextExtents(XQueryFont(_display, XGContextFromGC(*gc)), str, strlen(str),
+    XTextExtents(XQueryFont(_display, XGContextFromGC(gc)), str, strlen(str),
             &direction, &ascent, &descent, &strDimensions);
 
     int newX = x + (w - strDimensions.width) / 2;

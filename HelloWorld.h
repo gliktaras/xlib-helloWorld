@@ -33,11 +33,11 @@ private:
 
     Game _game;
 
-    void _drawO(GC* gc, int x, int y, int w, int h);
-    void _drawX(GC* gc, int x, int y, int w, int h);
+    void _drawO(const GC& gc, int x, int y, int w, int h);
+    void _drawX(const GC& gc, int x, int y, int w, int h);
 
-    void _drawString(GC* gc, const char* str, int x, int y);
-    void _drawStringCentered(GC* gc, const char* str, int x, int y, int w, int h);
+    void _drawString(const GC& gc, const char* str, int x, int y);
+    void _drawStringCentered(const GC& gc, const char* str, int x, int y, int w, int h);
 };
 
 inline Window HelloWorld::getWindow() {
